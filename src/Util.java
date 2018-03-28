@@ -1,4 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Util {
 
@@ -82,5 +86,45 @@ public class Util {
         }
 
         return result;
+    }
+
+    /**
+     * takes a String variable path, and then creates a print writer. Will exit with -1 status if the print writer errors
+     * out. The Null should never be reached if everything works out. If it errors out system exits, if it succeeds a print
+     * writer is returned.
+     *
+     * @param path string: the path of the file you are looking to write to
+     * @return the constructed printerwriter
+     */
+    public static PrintWriter writetoFile(String path){
+        try{
+            PrintWriter writer = new PrintWriter(new File(path));
+            return writer;
+        }catch(FileNotFoundException e){
+            System.out.println(e);
+            System.exit(-1);
+        }
+
+        //should never reach this due to either the print writer working, or it fails and system exits.
+        return null;
+    }
+
+    /**
+     * creates a Scanner object based on the path passed. Exits with status -1 if the a error happens along the way.
+     * The Null should never be reached, is there to make the compiler happy.
+     *
+     * @param path
+     * @return
+     */
+    public static Scanner createScanner(String path){
+        try{
+            Scanner scanner = new Scanner((new File(path)));
+            return scanner;
+        }catch (FileNotFoundException e){
+            System.out.println(e);
+            System.exit(-1);
+        }
+
+        return null;
     }
 }

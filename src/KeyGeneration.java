@@ -1,5 +1,3 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 public class KeyGeneration {
@@ -14,24 +12,14 @@ public class KeyGeneration {
         int d = (int) (Math.random()*p);
         long e =  Util.modularexponetiation(2,d,p);
 
-        File publicKey = new File("pubkey.txt");
-        File privateKey = new File("prikey.txt");
+        PrintWriter pubKey = Util.writetoFile("pubkey.txt");
+        pubKey.println(p+" 2 "+e);
 
-        try{
-            PrintWriter pubKey = new PrintWriter(publicKey);
-            pubKey.println("public: "+p+" 2 "+e);
+        PrintWriter priKey = Util.writetoFile("prikey.txt");
+        priKey.println(p+" 2 "+d);
 
-            PrintWriter priKey = new PrintWriter(privateKey);
-            priKey.println("private: "+p+" 2 "+d);
-
-            pubKey.close();
-            priKey.close();
-
-        }catch(FileNotFoundException error){
-            //Terminate file cause you cant save the keys
-            System.out.println(error);
-            System.exit(-1);
-        }
+        pubKey.close();
+        priKey.close();
 
         System.out.println("public: "+p+" 2 "+e);
         System.out.println("private: "+p+" 2 "+d);
@@ -51,8 +39,10 @@ public class KeyGeneration {
         long p = 0;
         while(loop){
             long q = generatePrime();
-            p = (2 * q) +1;
-            loop = !isPrime(p);
+            if(q % 12 == 5) {
+                p = (2 * q) + 1;
+                loop = !isPrime(p);
+            }
         }
 
         return p;
@@ -69,8 +59,6 @@ public class KeyGeneration {
             if(isPrime(prime))
                 return prime;
         }
-
-        //fix variable names
     }
 
     /**
@@ -82,7 +70,7 @@ public class KeyGeneration {
      */
     public static boolean isPrime(long prime){
         boolean isPrime = true;
-        for(int i=0;i < 2 && isPrime;i++){
+        for(int i=0;i < 6 && isPrime;i++){
             int value = (int)(Math.random() * (prime-1));
             isPrime = Util.millerRabin(value,prime);
         }
