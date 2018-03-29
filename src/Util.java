@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -126,5 +127,69 @@ public class Util {
         }
 
         return null;
+    }
+
+    /**
+     * TAkes the string converts it to hex and then to a decimal.
+     *
+     * @param word string: the plaintext in char format.
+     * @return returns the converted long.
+     */
+    public static long stringtoDecimal(String word){
+        String hex = String.format("%x",new BigInteger(word.getBytes()));
+        char[] hexList = hex.toCharArray();
+        long total = 0;
+        for(int i=hexList.length-1;i>=0;i--){
+            int exponent = 7 - i;
+            int value = hexchartoint(hexList[i]);
+            total += value * (int)(Math.pow(16,exponent));
+        }
+        return total;
+    }
+
+    /**
+     * Takes a char that is a hex value and returns the corresponding hex value. returns a -1 if a non hex value was passed.
+     *
+     * @param letter char: the hex value.
+     * @return a int value from 0-15.
+     */
+    private static int hexchartoint(char letter){
+        if(letter == '0') return 0;
+        if(letter == '1') return 1;
+        if(letter == '2') return 2;
+        if(letter == '3') return 3;
+        if(letter == '4') return 4;
+        if(letter == '5') return 5;
+        if(letter == '6') return 6;
+        if(letter == '7') return 7;
+        if(letter == '8') return 8;
+        if(letter == '9') return 9;
+        if(letter == 'a' || letter == 'A') return 10;
+        if(letter == 'b' || letter == 'B') return 11;
+        if(letter == 'c' || letter == 'C') return 12;
+        if(letter == 'd' || letter == 'D') return 13;
+        if(letter == 'e' || letter == 'E') return 14;
+        if(letter == 'f' || letter == 'F') return 15;
+        return -1;
+    }
+
+    /**
+     * Takes the decimal and converts it to its hex value. You then take the 8 bit chunks at a time and convert those back
+     * to their corresponding characters. What is returned is the converted string.
+     *
+     * @param decimal string: the decimal you wish to convert to a string.
+     * @return returns a string of chars that you converted.
+     */
+    public static String decimaltostring(String decimal){
+        String hex = Integer.toHexString(Integer.parseInt(decimal));
+        String result = "";
+        for(int i=0;i<hex.length()-1;i+=2){
+            String temp = hex.substring(i,i+2);
+            int hexValue = (int) Long.parseLong(temp,16);
+            char plainCharacter = (char) hexValue;
+            result+=plainCharacter;
+        }
+        return result;
+
     }
 }
